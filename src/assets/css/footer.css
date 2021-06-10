@@ -147,28 +147,34 @@ footer ul {
     overflow: hidden;
 }
 
+.subscribe-form input:valid {
+    border-bottom: 1px solid #54d40a;
+}
+
 .subscribe-form input {
     width: 100%;
-    padding: 14px 28px;
+    padding: 0 28px;
     background: #2E2E2E;
     border: none;
     border-bottom: 1px solid #ff5e14;
     color: #fff;
     outline: none;
     transition: .5s linear;
+    height: 50px;
 }
 
-.subscribe-form input:hover {
-    border: 1px solid #ff5e14;
+.is-invalid {
+    border-bottom: 1px solid #ff1414 !important;
 }
 
 .subscribe-form button {
     position: absolute;
     right: 0;
     background: #ff5e14;
-    padding: 13px 20px;
+    padding: 0 20px;
     border: 1px solid #ff5e14;
     top: 0;
+    height: 50px;
 }
 
 .subscribe-form button i {

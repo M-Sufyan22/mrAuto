@@ -153,3 +153,7 @@
         width: 100%;
     }
 }
+
+.invalid-feedback {
+    display: block !important
+}

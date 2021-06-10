@@ -491,8 +491,8 @@ body {
 
 .about {
     cursor: pointer;
-    background-color: #83838349;
-    color: #b9af25;
+    background-color: #6b28081c;
+    color: #000000;
     padding-top: 20px;
     padding-bottom: 30px;
     min-height: 60vh;
@@ -505,6 +505,7 @@ body {
 .about h1 {
     padding: 10px 0;
     margin-bottom: 50px;
+    margin-top: 10px;
 }
 
 .about h2 {
@@ -516,13 +517,13 @@ body {
     width: 100px;
     height: 100px;
     line-height: 100px;
-    margin: auto;
+    margin: 15px auto;
     border-radius: 50%;
     font-size: 40px;
     color: #FFFFFF;
     opacity: 0.7;
-    background-color: #08314c;
-    border: 2px solid #030f18;
+    background-color: #ff5e14;
+    border: 2px solid #ffffff;
     -webkit-transition: all .5s ease;
     -moz-transition: all .5s ease;
     -os-transition: all .5s ease;
@@ -531,7 +532,7 @@ body {
 
 .about-item:hover span {
     opacity: 1;
-    border: 2px solid #ccb800;
+    border: 2px solid #ffffff;
     font-size: 42px;
     -webkit-transform: scale(1.1, 1.1) rotate(360deg);
     -moz-transform: scale(1.1, 1.1) rotate(360deg);
@@ -554,7 +555,7 @@ body {
 }
 
 
-/*  */
+/* cart */
 
 .client-section {
     width: 100%;
@@ -739,94 +740,3 @@ body {
     background-color: #ff5e14;
     z-index: 9999,
 }
-
-
-/*  */
-
-
-/* 
-input[type="range"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 300px;
-    height: 5px;
-    padding: 0;
-    border-radius: 2px;
-    outline: none;
-    cursor: pointer;
-}
-
-
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -webkit-border-radius: 5px;
-
-    height: 16px;
-    width: 16px;
-    border-radius: 5px;
-    background: #e7e7e7;
-    border: 1px solid #c5c5c5;
-}
-
-
-input[type="range"]::-moz-range-thumb {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -moz-border-radius: 5px;
-    height: 14px;
-    width: 14px;
-    border-radius: 5px;
-    background: #e7e7e7;
-    border: 1px solid #c5c5c5;
-}
-
-
-
-
-input[type=range]::-ms-track {
-    width: 300px;
-    height: 6px;
-
-    background: transparent;
-  
-    border-color: transparent;
-    border-width: 2px 0;
- 
-    color: transparent;
-}
-
-
-
-input[type=range] {
-    background: red;
-}
-
-input[type=range]::-ms-thumb {
-    height: 14px;
-    width: 14px;
-    border-radius: 5px;
-    background: #e7e7e7;
-    border: 1px solid #c5c5c5;
-}
-
-
-
-
-input[type=range]::-ms-fill-lower {
-    background: #919e4b;
-    border-radius: 2px;
-}
-
-
-
-
-input[type=range]::-ms-fill-upper {
-    background: #c5c5c5;
-    border-radius: 2px;
-}
-
-input[type=range]::-ms-tooltip {
-    display: none;
-} */

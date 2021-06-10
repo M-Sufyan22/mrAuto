@@ -3,59 +3,53 @@ import "../../assets/css/footer.css";
 import { FaEnvelope, FaFacebook, FaGooglePlusG, FaMapMarkedAlt, FaPhone, FaTelegramPlane, FaTwitter } from "react-icons/fa";
 import ourLogo from "../../assets/images/webRelated/gears1.png";
 import firebase from "../../config/firebase";
-import {Link} from "react-router-dom";
-import {useFormik} from "formik";
+import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import {withRouter} from "react-router-dom";
 
-const initialValues={
-  email: ''
-}
+const Footer = (props) => {
 
-const onSubmit = values => {
-  console.log(values)
-}
 
-const validate = values => {
-  let errors = {}
-  if(!values.email){
-    errors.email = "Required"
-  }else if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(values.email)){
-    errors.email = 'Invalid email format'
+  const initialValues = {
+    email: ''
   }
-  return errors
-}
 
-const Footer = () => {
-  const [subEmail,setSubEmail] = React.useState("");
-  const formik = useFormik({
-    initialValues,
-    onSubmit,
-    validate
+  const validationSchema = Yup.object({
+    email: Yup.string().email('Invalid email!').required('Required!')
   })
 
-  const SubscribeEmail = (e) => {
-    e.preventDefault();
-    if(subEmail){
+  const SubscribeEmail = (values) => {
+   
+    if (values.email) {
       let key = firebase.database().ref('emailSubscribers').push().key;
-      firebase.database().ref('emailSubscribers').child(key).set(subEmail).then(()=>{
-        setSubEmail("");
-        alert("Thankyou !", "You have Successfully subscribed our email news letter")
+      firebase.database().ref('emailSubscribers').child(key).set(values.email).then(() => {
+        values.email = "";
+        formik.handleReset()
+        alert("Thankyou ! \n You have Successfully subscribed our email news letter")
       })
-    }else{
+    } else {
       alert("Please Enter your Email")
     }
 
   }
- console.log(formik.values, formik.errors)
+  const formik = useFormik({
+    initialValues,
+    onSubmit: SubscribeEmail,
+    validationSchema,
+    onReset: ""
+  })
   return (
-
+    props.location.pathname &&
+      props.history.location.pathname !== "/AdminDashboard" ? (
+        <>
     <footer className="footer-section">
       <div className="container">
         <div className="footer-cta pt-5 pb-5">
           <div className="row">
             <div className="col-xl-4 col-md-4 mb-30">
               <div className="single-cta">
-                <i ><FaMapMarkedAlt/></i>
-                
+                <i ><FaMapMarkedAlt /></i>
                 <div className="cta-text">
                   <h4>Find us</h4>
                   <span>Faislabad, Pakistan</span>
@@ -64,7 +58,7 @@ const Footer = () => {
             </div>
             <div className="col-xl-4 col-md-4 mb-30">
               <div className="single-cta">
-                <i><FaPhone/> </i>
+                <i><FaPhone /> </i>
 
                 <div className="cta-text">
                   <h4>Call us</h4>
@@ -74,7 +68,7 @@ const Footer = () => {
             </div>
             <div className="col-xl-4 col-md-4 mb-30">
               <div className="single-cta">
-                <i><FaEnvelope/></i>
+                <i><FaEnvelope /></i>
                 <div className="cta-text">
                   <h4>Mail us</h4>
                   <span>mrAuto@gmail.com</span>
@@ -96,9 +90,9 @@ const Footer = () => {
                 </div>
                 <div className="footer-social-icon">
                   <span>Follow us</span>
-                  <a href="#"><i className="facebook-bg"><FaFacebook/></i></a>
-                  <a href="#"><i className="twitter-bg"><FaTwitter/></i></a>
-                  <a href="#"><i className="google-bg"><FaGooglePlusG/></i></a>
+                  <a href="#"><i className="facebook-bg"><FaFacebook /></i></a>
+                  <a href="#"><i className="twitter-bg"><FaTwitter /></i></a>
+                  <a href="#"><i className="google-bg"><FaGooglePlusG /></i></a>
                 </div>
               </div>
             </div>
@@ -108,16 +102,16 @@ const Footer = () => {
                   <h3>Useful Links</h3>
                 </div>
                 <ul>
-                  <li><Link to="/" onClick={()=> window.scrollTo(0,0)}>Home</Link></li>
-                  <li><Link to="/About" onClick={()=> window.scrollTo(0,0)}>About us</Link></li>
-                  <li><Link to="/Shop" onClick={()=> window.scrollTo(0,0)}>Shop</Link></li>
-                  <li><Link to="/Contact" onClick={()=> window.scrollTo(0,0)}>Contact</Link></li>
+                  <li><Link to="/" onClick={() => window.scrollTo(0, 0)}>Home</Link></li>
+                  <li><Link to="/About" onClick={() => window.scrollTo(0, 0)}>About us</Link></li>
+                  <li><Link to="/Shop" onClick={() => window.scrollTo(0, 0)}>Shop</Link></li>
+                  <li><Link to="/Contact" onClick={() => window.scrollTo(0, 0)}>Contact</Link></li>
                   <li>Categories</li>
                   <li><Link to="/"></Link></li>
-                  <li><Link to="/Shop/Bearing" onClick={()=> window.scrollTo(0,0)}>Bearing</Link></li>
-                  <li><Link to="/Shop/OtherItems" onClick={()=> window.scrollTo(0,0)}>OtherItems</Link></li>
-                  <li><Link to="/Shop/Seal" onClick={()=> window.scrollTo(0,0)}>Seal</Link></li>
-                  <li><Link to="/Shop/Tubes" onClick={()=> window.scrollTo(0,0)}>Tubes</Link></li>
+                  <li><Link to="/Shop/Bearing" onClick={() => window.scrollTo(0, 0)}>Bearing</Link></li>
+                  <li><Link to="/Shop/OtherItems" onClick={() => window.scrollTo(0, 0)}>OtherItems</Link></li>
+                  <li><Link to="/Shop/Seal" onClick={() => window.scrollTo(0, 0)}>Seal</Link></li>
+                  <li><Link to="/Shop/Tubes" onClick={() => window.scrollTo(0, 0)}>Tubes</Link></li>
                 </ul>
               </div>
             </div>
@@ -131,9 +125,16 @@ const Footer = () => {
                 </div>
                 <div className="subscribe-form">
                   <form action="" onSubmit={formik.handleSubmit}>
-                    <input type="email" name="email"  id="email" placeholder="Email Address" onChange={formik.handleChange} value={formik.values.email}/>
-                    {formik.errors.email ? <p>{formik.errors.email}</p>: null}
-                    <button type="submit"><i><FaTelegramPlane/></i></button>
+                    <div class="input-group">
+                      <input type="email" name="email" id="email" id="validationServerUsername" placeholder="Email Address" onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email} className={formik.touched.email && formik.errors.email && "is-invalid" } required/>
+                      {formik.touched.email && formik.errors.email ? <div class="invalid-feedback">
+                      {formik.errors.email}
+                    </div> : null}
+                    </div>
+                    
+                    <button type="submit"><i><FaTelegramPlane /></i></button>
+
+
                   </form>
                 </div>
               </div>
@@ -152,10 +153,10 @@ const Footer = () => {
             <div className="col-xl-6 col-lg-6 d-none d-lg-block text-right">
               <div className="footer-menu">
                 <ul>
-                  <li><Link to="/" onClick={()=> window.scrollTo(0,0)}>Home</Link></li>
-                  <li><Link to="/Shop" onClick={()=> window.scrollTo(0,0)}>Shop</Link></li>
-                  <li><Link to="/Contact" onClick={()=> window.scrollTo(0,0)}>Contact</Link></li>
-                  <li><Link to="/About" onClick={()=> window.scrollTo(0,0)}>About</Link></li>
+                  <li><Link to="/" onClick={() => window.scrollTo(0, 0)}>Home</Link></li>
+                  <li><Link to="/Shop" onClick={() => window.scrollTo(0, 0)}>Shop</Link></li>
+                  <li><Link to="/Contact" onClick={() => window.scrollTo(0, 0)}>Contact</Link></li>
+                  <li><Link to="/About" onClick={() => window.scrollTo(0, 0)}>About</Link></li>
                 </ul>
               </div>
             </div>
@@ -163,7 +164,10 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+        </>
+    ) :null
+
   )
 }
 
-export default Footer;
+export default withRouter(Footer);

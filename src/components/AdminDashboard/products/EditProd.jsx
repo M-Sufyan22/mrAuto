@@ -12,15 +12,9 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { CardMedia } from "@material-ui/core";
 import { IconButton } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
 import EditRounded from "@material-ui/icons/EditRounded";
-import PageviewIcon from "@material-ui/icons/Pageview";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import CloseIcon from "@material-ui/icons/Close";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
@@ -28,14 +22,19 @@ import RefreshRounded from "@material-ui/icons/RefreshRounded";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import ClearIcon from "@material-ui/icons/Clear";
+import PageviewIcon from "@material-ui/icons/Pageview";
+import DeleteIcon from "@material-ui/icons/Delete";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Box from "@material-ui/core/Box";
-import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
     height: "50px",
     width: "50px",
     borderRadius: "50%",
+    zIndex: -1
   },
   appBar: {
     position: "relative",
@@ -68,57 +68,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const db = firebase.database();
-const dbUserRef = db.ref("users");
+const dbProductsRef = db.ref("all_Products/categories");
 
 const UsersManage = (props) => {
-  const classes = useStyles();
-  let [allUsers, setallUsers] = useState([]);
-  let month = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  let days = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  useEffect(() => {
-    getAllUsers();
-  }, []);
-  function getAllUsers() {
-    let allData = [];
-    dbUserRef.on("child_added", (data) => {
-      allData.push(data.val());
-    });
-    setTimeout(() => {
-      setallUsers(allData);
-    }, 300);
-  }
 
-  function preventDefault(event) {
-    event.preventDefault();
+  let [allProducts, setallProducts] = useState([]);
+
+  useEffect(() => {
+    getAllProducts();
+  }, []);
+
+  function getAllProducts() {
+    let allData = [];
+    dbProductsRef.on('child_added', data => {
+      allData.push(data.val());
+      setallProducts(allData)
+    })
+    return allProducts
   }
   return (
     <React.Fragment>
-      {allUsers.length !== 0 ? (
+      {allProducts.length !== 0 ? (
         <React.Fragment>
           <CustomizedTables
-            allUsers={allUsers}
-            getagainAllusers={getAllUsers}
+            allProducts={allProducts}
+            getagainAllprods={getAllProducts}
           />
         </React.Fragment>
       ) : (
@@ -127,14 +101,7 @@ const UsersManage = (props) => {
     </React.Fragment>
   );
 };
-function Loader() {
-  return (
-    <div style={{ margin: "15px auto", width: "100%" }}>
-      <div class="loader" style={{ margin: "15px auto" }}></div>
-      <h4 style={{ margin: " 0 auto", textAlign: "center" }}>Loading...</h4>
-    </div>
-  );
-}
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
@@ -153,21 +120,17 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-var user = firebase.auth().currentUser;
 function CustomizedTables(props) {
   const classes = useStyles();
 
   return (
     <>
       <TableContainer component={Paper} className={classes.container}>
-        <Typography color="primary" style={{padding: "10px",float: "right"}} variant="h6">Refresh <IconButton 
-                  color="primary"
-                  onClick={() => props.getagainAllusers()}
-                >
-                
-                  <RefreshRounded />
-                </IconButton></Typography>
-     
+        <Typography color="primary" style={{ padding: "10px", float: "right" }} variant="h6">Refresh
+         <IconButton color="primary" onClick={() => props.getagainAllprods()}>
+            <RefreshRounded />
+          </IconButton>
+        </Typography>
         <Table
           stickyHeader
           className={classes.table}
@@ -175,52 +138,50 @@ function CustomizedTables(props) {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                align="left"
-              >
-          
-                Profile
-              </StyledTableCell>
-              <StyledTableCell>Name</StyledTableCell>
-              <StyledTableCell align="left">Email</StyledTableCell>
-              <StyledTableCell align="left">Phone</StyledTableCell>
-              <StyledTableCell align="left">Address</StyledTableCell>
-              <StyledTableCell align="left">Actions</StyledTableCell>
+              <StyledTableCell>image</StyledTableCell>
+              <StyledTableCell>Title</StyledTableCell>
+              <StyledTableCell align="left">Price</StyledTableCell>
+              <StyledTableCell align="left">Category</StyledTableCell>
+              <StyledTableCell align="left">Brand</StyledTableCell>
+              <StyledTableCell align="left">Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.allUsers.map((user, i) => (
-              <>
-                <StyledTableRow key={i}>
-                  {/* <StyledTableCell align="left"></StyledTableCell> */}
-                  <StyledTableCell align="left">
-                    <CardMedia
-                      className={classes.media}
-                      image={user.userProfile}
-                    />
-                  </StyledTableCell>
-                  <StyledTableCell component="th" scope="row">
-                    {user.userName}
-                  </StyledTableCell>
-                  <StyledTableCell align="left">
-                    {user.userEmail}
-                  </StyledTableCell>
-                  <StyledTableCell align="left">{user.phone}</StyledTableCell>
-                  <StyledTableCell align="left">{user.address}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    <UpdateForm
-                      updUser={user.userUid}
-                      getagainAllusers={props.getagainAllusers}
-                    />           
-                  </StyledTableCell>{" "}
-                </StyledTableRow>
-              </>
-            ))}
+            {Object.values(props.allProducts).map((v, i) => {
+              return (
+                Object.values(v).map((vs, is) => {
+                  let product = vs.prod;
+                  return (
+                    <StyledTableRow key={i}>
+
+                      <StyledTableCell align="left">
+                        <CardMedia
+                          className={classes.media}
+
+                          image={product.imgs[0] ? product.imgs[0] : product.imgs[1] ? product.imgs[1] : product.imgs[2]}
+                        />
+                      </StyledTableCell>
+                      <StyledTableCell component="th" scope="row">
+                        {product.title}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        {product.price}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">{product.category}</StyledTableCell>
+                      <StyledTableCell align="left">{product.brand}</StyledTableCell>
+                      <StyledTableCell align="center">
+                        <UpdateForm
+                          ky={product.key}
+                          cat={product.category}
+                          getagainAllprods={props.getagainAllprods} chkAg={props.getagainAllprods}/>
+                        <ConfirmDialog ky={product.key} cat={product.category} getagainAllprods={props.getagainAllprods}/>
+                        <FullScreenUserDetails ky={product.key} cat={product.category}/>
+                      </StyledTableCell>{" "}
+                    </StyledTableRow>
+                  )
+                })
+              )
+            })}
           </TableBody>
         </Table>
       </TableContainer>
@@ -230,6 +191,482 @@ function CustomizedTables(props) {
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+
+const UpdateForm = (props) => {
+
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [updDetails, setupdDetails] = useState({
+    brand: "",
+    category: "",
+    condition: "",
+    description: "",
+    imgs: [],
+    key: "",
+    postdate: "",
+    price: "",
+    title: ""
+  });
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    props.chkAg();
+  };
+
+  const handleUserUpdDetails = (event) => {
+    setupdDetails({
+      ...updDetails,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const updateProductrDetails = () => {
+    if (props.cat, props.ky) {
+      dbProductsRef
+        .child(props.cat)
+        .child(props.ky)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            dbProductsRef.child(props.cat).child(props.ky).child('prod').update(updDetails).then(() => {
+              handleClose();
+              alert("Updated Product successfully!");
+            });
+          }
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    } else {
+      alert("This Product is not Exist");
+    }
+  };
+
+  function getPreviousData(cate, ky) {
+    if (cate && ky) {
+      dbProductsRef
+        .child(cate)
+        .child(ky)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            setupdDetails(snapshot.val().prod);
+            setLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert(error.message);
+        });
+    }
+  }
+
+  var files = [];
+
+  function selectImg(e, imgno) {
+    e.preventDefault();
+    var input = document.createElement("input");
+    input.type = "file";
+    input.onchange = (e) => {
+      files = e.target.files;
+      upDateProdImage(files[0].name, files[0], imgno)
+    };
+    input.click();
+  }
+
+  const upDateProdImage = (name, img, imgno) => {
+    var uploadTask = firebase
+      .storage()
+      .ref("store-images/" + name)
+      .put(img);
+    uploadTask.on(
+      "state_changed",
+      function (snapshot) {
+        var progress = Math.floor(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setLoading(true);
+      },
+      function (error) {
+        setLoading(false);
+        alert("Error occurred while Saving Images!");
+      },
+      function () {
+        uploadTask.snapshot.ref.getDownloadURL().then(function (url) {
+          setLoading(false);
+          if (props.cat && props.ky) {
+            setLoading(true);
+            dbProductsRef
+              .child(props.cat)
+              .child(props.ky)
+              .get()
+              .then((snapshot) => {
+                if (snapshot.exists()) {
+                  let arr = []
+                  let img1 = snapshot.val().prod.imgs[0];
+                  let img2 = snapshot.val().prod.imgs[1];
+                  let img3 = snapshot.val().prod.imgs[2];
+                  if (imgno === 1) {
+                    img1 = url
+                  }
+                  if (imgno === 2) {
+                    img2 = url
+                  }
+                  if (imgno === 3) {
+                    img3 = url
+                  }
+                  arr.push(img1, img2, img3)
+                  dbProductsRef
+                    .child(props.cat)
+                    .child(props.ky).child('prod').child('imgs').update(arr).then(() => {
+                      getPreviousData(props.cat, props.ky);
+                      setLoading(false);
+                      alert("Image Updated Successfully!")
+                    })
+                }
+              })
+              .catch((error) => {
+                console.error(error);
+                alert(error.message);
+                setLoading(false);
+              });
+          }
+        });
+      }
+    );
+  };
+
+  function removeImg(imgno) {
+
+    if (props.cat && props.ky) {
+      dbProductsRef
+        .child(props.cat)
+        .child(props.ky)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            let arr = []
+            let img1 = snapshot.val().prod.imgs[0];
+            let img2 = snapshot.val().prod.imgs[1];
+            let img3 = snapshot.val().prod.imgs[2];
+            if (imgno === 1) {
+              img1 = ""
+            }
+            if (imgno === 2) {
+              img2 = ""
+            }
+            if (imgno === 3) {
+              img3 = ""
+            }
+            arr.push(img1, img2, img3)
+            dbProductsRef
+              .child(props.cat)
+              .child(props.ky).child('prod').child('imgs').update(arr).then(() => {
+                getPreviousData(props.cat, props.ky);
+                alert("Image deleted Successfully!")
+              })
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert(error.message);
+        });
+    }
+  }
+
+  return (
+    <>
+      <IconButton
+        onClick={() => {
+          handleClickOpen();
+          getPreviousData(props.cat, props.ky);
+        }}
+        aria-label="update"
+        color="primary"
+      >
+        <EditRounded />
+      </IconButton>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+      >
+
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              Product Details
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <div className="UserupdateFormAdmin">
+          {loading ? <Loader /> : <>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  name="title"
+                  label="Title"
+                  fullWidth
+                  autoComplete="off"
+                  value={updDetails.title}
+                  onChange={(e) => handleUserUpdDetails(e)}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  name="description"
+                  label="Description"
+                  multiline
+                  rows={2}
+                  rowsMax={4}
+                  fullWidth
+                  autoComplete="off"
+                  value={updDetails.description}
+                  onChange={(e) => handleUserUpdDetails(e)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  name="category"
+                  label="Category"
+                  fullWidth
+                  autoComplete="off"
+                  value={updDetails.category}
+                  onChange={(e) => handleUserUpdDetails(e)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  name="brand"
+                  label="Brand"
+                  fullWidth
+                  autoComplete="off"
+                  value={updDetails.brand}
+                  onChange={(e) => handleUserUpdDetails(e)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  name="price"
+                  label="Price"
+                  fullWidth
+                  autoComplete="off"
+                  value={updDetails.price}
+                  onChange={(e) => handleUserUpdDetails(e)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  name="condition"
+                  label="Condition"
+                  fullWidth
+                  autoComplete="off"
+                  value={updDetails.condition}
+                  onChange={(e) => handleUserUpdDetails(e)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <div className="SelectprodImgWrapper" style={{ margin: "7px auto !important", width: "100% !important" }}>
+                  <button
+                    className="imgSelbtn"
+                    onClick={(e) => selectImg(e, 1)}
+                  >
+                    {updDetails.imgs.length ? (
+                      updDetails.imgs[0] ?
+                        <img
+                          id="productImg1"
+                          className="formProdimg"
+                          alt="product img"
+                          src={updDetails.imgs[0]}
+                        />
+                        :
+                        <>
+                          <svg
+                            width="36px"
+                            height="36px"
+                            viewBox="0 0 1024 1024"
+                            data-aut-id="icon"
+                            fill="#002f34"
+                          >
+                            <path d="M861.099 667.008v78.080h77.568v77.653h-77.568v77.141h-77.568v-77.184h-77.611v-77.611h77.611v-78.080h77.568zM617.515 124.16l38.784 116.437h165.973l38.827 38.827v271.659l-38.827 38.357-38.741-38.4v-232.832h-183.125l-38.784-116.48h-176.853l-38.784 116.48h-183.083v426.923h426.667l38.784 38.357-38.784 39.253h-465.493l-38.741-38.869v-504.491l38.784-38.827h165.973l38.827-116.437h288.597zM473.216 318.208c106.837 0 193.92 86.955 193.92 194.048 0 106.923-87.040 194.091-193.92 194.091s-193.963-87.168-193.963-194.091c0-107.093 87.083-194.048 193.963-194.048zM473.216 395.861c-64.213 0-116.352 52.181-116.352 116.395 0 64.256 52.139 116.437 116.352 116.437 64.171 0 116.352-52.181 116.352-116.437 0-64.213-52.181-116.437-116.352-116.437z"></path>
+                          </svg>
+                          <span>Add Photo</span>
+                        </>
+                    ) : (
+                      <>
+                        <svg
+                          width="36px"
+                          height="36px"
+                          viewBox="0 0 1024 1024"
+                          data-aut-id="icon"
+                          fill="#002f34"
+                        >
+                          <path d="M861.099 667.008v78.080h77.568v77.653h-77.568v77.141h-77.568v-77.184h-77.611v-77.611h77.611v-78.080h77.568zM617.515 124.16l38.784 116.437h165.973l38.827 38.827v271.659l-38.827 38.357-38.741-38.4v-232.832h-183.125l-38.784-116.48h-176.853l-38.784 116.48h-183.083v426.923h426.667l38.784 38.357-38.784 39.253h-465.493l-38.741-38.869v-504.491l38.784-38.827h165.973l38.827-116.437h288.597zM473.216 318.208c106.837 0 193.92 86.955 193.92 194.048 0 106.923-87.040 194.091-193.92 194.091s-193.963-87.168-193.963-194.091c0-107.093 87.083-194.048 193.963-194.048zM473.216 395.861c-64.213 0-116.352 52.181-116.352 116.395 0 64.256 52.139 116.437 116.352 116.437 64.171 0 116.352-52.181 116.352-116.437 0-64.213-52.181-116.437-116.352-116.437z"></path>
+                        </svg>
+                        <span>Add Photo</span>
+                      </>
+                    )}
+                  </button>
+
+                  {updDetails.imgs.length ? (
+                    updDetails.imgs[0] ? (
+                      <ClearIcon
+                        onClick={() => removeImg(1)}
+                        className="removeimg"
+                      />
+                    ) : null
+                  ) : null}
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <div className="SelectprodImgWrapper" style={{ margin: "7px auto !important", width: "100% !important" }}>
+                  <button
+                    className="imgSelbtn"
+                    onClick={(e) => selectImg(e, 2)}
+                  >
+                    {updDetails.imgs.length ? (
+                      updDetails.imgs[1] ?
+                        <img
+                          id="productImg2"
+                          className="formProdimg"
+                          alt="product img"
+                          src={updDetails.imgs[1]}
+                        />
+                        : <>
+                          <svg
+                            width="36px"
+                            height="36px"
+                            viewBox="0 0 1024 1024"
+                            data-aut-id="icon"
+                            fill="#002f34"
+                          >
+                            <path d="M861.099 667.008v78.080h77.568v77.653h-77.568v77.141h-77.568v-77.184h-77.611v-77.611h77.611v-78.080h77.568zM617.515 124.16l38.784 116.437h165.973l38.827 38.827v271.659l-38.827 38.357-38.741-38.4v-232.832h-183.125l-38.784-116.48h-176.853l-38.784 116.48h-183.083v426.923h426.667l38.784 38.357-38.784 39.253h-465.493l-38.741-38.869v-504.491l38.784-38.827h165.973l38.827-116.437h288.597zM473.216 318.208c106.837 0 193.92 86.955 193.92 194.048 0 106.923-87.040 194.091-193.92 194.091s-193.963-87.168-193.963-194.091c0-107.093 87.083-194.048 193.963-194.048zM473.216 395.861c-64.213 0-116.352 52.181-116.352 116.395 0 64.256 52.139 116.437 116.352 116.437 64.171 0 116.352-52.181 116.352-116.437 0-64.213-52.181-116.437-116.352-116.437z"></path>
+                          </svg>
+                          <span>Add Photo</span>
+                        </>
+                    ) : (
+                      <>
+                        <svg
+                          width="36px"
+                          height="36px"
+                          viewBox="0 0 1024 1024"
+                          data-aut-id="icon"
+                          fill="#002f34"
+                        >
+                          <path d="M861.099 667.008v78.080h77.568v77.653h-77.568v77.141h-77.568v-77.184h-77.611v-77.611h77.611v-78.080h77.568zM617.515 124.16l38.784 116.437h165.973l38.827 38.827v271.659l-38.827 38.357-38.741-38.4v-232.832h-183.125l-38.784-116.48h-176.853l-38.784 116.48h-183.083v426.923h426.667l38.784 38.357-38.784 39.253h-465.493l-38.741-38.869v-504.491l38.784-38.827h165.973l38.827-116.437h288.597zM473.216 318.208c106.837 0 193.92 86.955 193.92 194.048 0 106.923-87.040 194.091-193.92 194.091s-193.963-87.168-193.963-194.091c0-107.093 87.083-194.048 193.963-194.048zM473.216 395.861c-64.213 0-116.352 52.181-116.352 116.395 0 64.256 52.139 116.437 116.352 116.437 64.171 0 116.352-52.181 116.352-116.437 0-64.213-52.181-116.437-116.352-116.437z"></path>
+                        </svg>
+                        <span>Add Photo</span>
+                      </>
+                    )}
+                  </button>
+
+                  {updDetails.imgs.length ? (
+                    updDetails.imgs[1] ? (
+                      <ClearIcon
+                        onClick={() => removeImg(2)}
+                        className="removeimg"
+                      />
+                    ) : null
+                  ) : null}
+
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <div className="SelectprodImgWrapper" style={{ margin: "7px auto !important", width: "100% !important" }}>
+                  <button
+                    className="imgSelbtn"
+                    onClick={(e) => selectImg(e, 3)}
+                  >
+                    {updDetails.imgs.length ? (
+                      updDetails.imgs[2] ? (
+                        <img
+                          id="productImg3"
+                          className="formProdimg"
+                          alt="product img"
+                          src={updDetails.imgs[2]}
+                        />
+
+                      )
+                        :
+                        <>
+                          <svg
+                            width="36px"
+                            height="36px"
+                            viewBox="0 0 1024 1024"
+                            data-aut-id="icon"
+                            fill="#002f34"
+                          >
+                            <path d="M861.099 667.008v78.080h77.568v77.653h-77.568v77.141h-77.568v-77.184h-77.611v-77.611h77.611v-78.080h77.568zM617.515 124.16l38.784 116.437h165.973l38.827 38.827v271.659l-38.827 38.357-38.741-38.4v-232.832h-183.125l-38.784-116.48h-176.853l-38.784 116.48h-183.083v426.923h426.667l38.784 38.357-38.784 39.253h-465.493l-38.741-38.869v-504.491l38.784-38.827h165.973l38.827-116.437h288.597zM473.216 318.208c106.837 0 193.92 86.955 193.92 194.048 0 106.923-87.040 194.091-193.92 194.091s-193.963-87.168-193.963-194.091c0-107.093 87.083-194.048 193.963-194.048zM473.216 395.861c-64.213 0-116.352 52.181-116.352 116.395 0 64.256 52.139 116.437 116.352 116.437 64.171 0 116.352-52.181 116.352-116.437 0-64.213-52.181-116.437-116.352-116.437z"></path>
+                          </svg>
+                          <span>Add Photo</span>
+                        </>
+
+                    )
+                      : (
+                        <>
+                          <svg
+                            width="36px"
+                            height="36px"
+                            viewBox="0 0 1024 1024"
+                            data-aut-id="icon"
+                            fill="#002f34"
+                          >
+                            <path d="M861.099 667.008v78.080h77.568v77.653h-77.568v77.141h-77.568v-77.184h-77.611v-77.611h77.611v-78.080h77.568zM617.515 124.16l38.784 116.437h165.973l38.827 38.827v271.659l-38.827 38.357-38.741-38.4v-232.832h-183.125l-38.784-116.48h-176.853l-38.784 116.48h-183.083v426.923h426.667l38.784 38.357-38.784 39.253h-465.493l-38.741-38.869v-504.491l38.784-38.827h165.973l38.827-116.437h288.597zM473.216 318.208c106.837 0 193.92 86.955 193.92 194.048 0 106.923-87.040 194.091-193.92 194.091s-193.963-87.168-193.963-194.091c0-107.093 87.083-194.048 193.963-194.048zM473.216 395.861c-64.213 0-116.352 52.181-116.352 116.395 0 64.256 52.139 116.437 116.352 116.437 64.171 0 116.352-52.181 116.352-116.437 0-64.213-52.181-116.437-116.352-116.437z"></path>
+                          </svg>
+                          <span>Add Photo</span>
+                        </>
+
+                      )}
+                  </button>
+                  {updDetails.imgs.length ? (
+                    updDetails.imgs[2] ? (
+                      <ClearIcon
+                        onClick={() => removeImg(3)}
+                        className="removeimg"
+                      />
+                    ) : null
+                  ) : null}
+                </div>
+              </Grid>
+            </Grid>
+
+            <Button
+              style={{ marginTop: "10px", marginLeft: "7px", backgroundColor: "#ff5e14", color: "#fff" }}
+              variant="contained"
+              onClick={updateProductrDetails}
+            >
+              Update
+            <DoneAllIcon color="#fff" />
+            </Button>
+          </>
+          }
+        </div>
+      </Dialog>
+    </>
+  );
+};
 
 const ConfirmDialog = (props) => {
   const [open, setOpen] = useState(false);
@@ -241,24 +678,25 @@ const ConfirmDialog = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
-  const deleteUser = (delUser) => {
-    if (delUser) {
-      dbUserRef
-        .child(delUser)
+  const deleteProd = () => {
+    if (props.cat, props.ky) {
+      dbProductsRef
+        .child(props.cat)
+        .child(props.ky)
         .get()
         .then((snapshot) => {
           if (snapshot.exists()) {
             handleClose();
-            dbUserRef.child(delUser).remove();
-            props.getagainAllusers();
-            alert("Deleted successfully!");
+            dbProductsRef.child(props.cat).child(props.ky).remove();
+            props.getagainAllprods();
+            alert("Product Deleted successfully!");
           }
         })
         .catch((error) => {
           alert(error.message);
         });
     } else {
-      alert("This user is not Exist");
+      alert("This Product is not Exist");
     }
   };
   return (
@@ -281,7 +719,7 @@ const ConfirmDialog = (props) => {
         <DialogTitle id="alert-dialog-slide-title">{"Alert !"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to delete this user?
+            Are you sure you want to delete this product?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -290,7 +728,7 @@ const ConfirmDialog = (props) => {
           </IconButton>
           <IconButton
             color="secondary"
-            onClick={() => deleteUser(props.delUser)}
+            onClick={deleteProd}
           >
             <DoneAllIcon />
           </IconButton>
@@ -300,181 +738,28 @@ const ConfirmDialog = (props) => {
   );
 };
 
-const UpdateForm = (props) => {
-  const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const [updDetails, setupdDetails] = useState({
-    userName: "",
-    address: "",
-    phone: "",
-  });
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleUserUpdDetails = (event) => {
-    setupdDetails({
-      ...updDetails,
-      [event.target.name]: event.target.value,
-    });
-
-    return true;
-  };
-  const updateUserDetails = (updUser) => {
-    if (updUser) {
-      dbUserRef
-        .child(updUser)
-        .get()
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            dbUserRef.child(updUser).update({
-              userName: updDetails.userName,
-              address: updDetails.address,
-              phone: updDetails.phone,
-            });
-            handleClose();
-
-            props.getagainAllusers();
-            alert("Updated User successfully!");
-          }
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    } else {
-      alert("This user is not Exist");
-    }
-  };
-
-  function getPreviousData(updUser) {
-    if (updUser) {
-      dbUserRef
-        .child(updUser)
-        .get()
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            setupdDetails(snapshot.val());
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          alert(error.message);
-        });
-    }
-  }
-
+function Loader() {
   return (
-    <>
-      <IconButton
-        onClick={() => {
-          handleClickOpen();
-          getPreviousData(props.updUser);
-        }}
-        aria-label="update"
-        color="primary"
-      >
-        <EditRounded />
-      </IconButton>
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-      >
-        {" "}
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              User Details
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <div className="UserupdateFormAdmin">
-          <Typography variant="h6" gutterBottom>
-            User Meta Details
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                // id="userName"
-                name="userName"
-                label="userName"
-                fullWidth
-                autoComplete="user-name"
-                value={updDetails.userName}
-                onChange={(e) => handleUserUpdDetails(e)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                // id="Phone"
-                name="phone"
-                label="Phone"
-                fullWidth
-                autoComplete="Phone"
-                value={updDetails.phone}
-                onChange={(e) => handleUserUpdDetails(e)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                // id="Address"
-                name="address"
-                label="Address"
-                fullWidth
-                autoComplete="shipping address"
-                value={updDetails.address}
-                onChange={(e) => handleUserUpdDetails(e)}
-              />
-            </Grid>
-          </Grid>
-          <p
-            style={{ margin: "5px  0" }}
-            id="updErrMsg"
-            style={{ color: "red" }}
-          ></p>
-          <Button
-            style={{ marginTop: "10px", marginLeft: "7px" }}
-            variant="contained"
-            color="secondary"
-            onClick={() => updateUserDetails(props.updUser)}
-          >
-            Update
-            <DoneAllIcon color="#fff" />
-          </Button>
-        </div>
-      </Dialog>
-    </>
+    <div style={{ margin: "15px auto", width: "100%" }}>
+      <div class="loader" style={{ margin: "15px auto" }}></div>
+      <h4 style={{ margin: " 0 auto", textAlign: "center" }}>Loading...</h4>
+    </div>
   );
-};
+}
 
 function FullScreenUserDetails(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [updDetails, setupdDetails] = useState({
-    userName: "",
-    address: "",
-    phone: "",
-    userUid: "",
-    admin: false,
-    userEmail: "",
-    userProfile: "",
+    brand: "",
+    category: "",
+    condition: "",
+    description: "",
+    imgs: [],
+    key: "",
+    postdate: "",
+    price: "",
+    title: ""
   });
   const handleClickOpen = () => {
     setOpen(true);
@@ -483,14 +768,15 @@ function FullScreenUserDetails(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  function getPreviousData(updUser) {
-    if (updUser) {
-      dbUserRef
-        .child(updUser)
+  function getPreviousData() {
+    if (props.cat && props.ky) {
+      dbProductsRef
+        .child(props.cat)
+        .child(props.ky)
         .get()
         .then((snapshot) => {
           if (snapshot.exists()) {
-            setupdDetails(snapshot.val());
+            setupdDetails(snapshot.val().prod);
           }
         })
         .catch((error) => {
@@ -526,7 +812,7 @@ function FullScreenUserDetails(props) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              User Details
+              Product Details
             </Typography>
           </Toolbar>
         </AppBar>
@@ -534,74 +820,72 @@ function FullScreenUserDetails(props) {
           <List>
             <ListItem>
               <CardMedia
-                image={updDetails.userProfile}
+                image={updDetails.imgs[0] ? updDetails.imgs[0] : updDetails.imgs[1] ? updDetails.imgs[1] : updDetails.imgs[2]}
                 className={classes.media}
                 style={{
                   marginBottom: "10px",
                   borderRadius: "none",
                   marginRight: "18px",
+                  width: "50px",
+                  height: "50px",
+                  
                 }}
+                component={"image"}
               />
               <ListItemText
-                primary={updDetails.userName}
-                secondary="UserName"
+                primary={updDetails.title}
+                secondary="Title"
               />
             </ListItem>
             <Divider />
 
             <ListItem>
               <ListItemText
-                primary={updDetails.userName}
-                secondary="UserName"
+                primary={updDetails.category}
+                secondary="Category"
               />
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary={updDetails.userEmail} secondary="Email" />
+              <ListItemText primary={updDetails.description} secondary="Description" />
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary={updDetails.phone} secondary="Phone" />
+              <ListItemText primary={updDetails.price} secondary="Price" />
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary={updDetails.address} secondary="Address" />
+              <ListItemText primary={updDetails.brand} secondary="Brand" />
             </ListItem>
             <Divider />
             <ListItem>
               <ListItemText
-                primary={updDetails.admin ? "Yes" : "No"}
-                secondary="Adminl"
+                primary={updDetails.condition}
+                secondary="Condition"
               />
             </ListItem>
             <Divider />
             <ListItem>
-              <ListItemText primary={updDetails.userUid} secondary="UserUid" />
+              <ListItemText
+                primary={updDetails.postdate}
+                secondary="PostDate"
+              />
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <ListItemText primary={updDetails.key} secondary="Id" />
             </ListItem>
           </List>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
+         
         </div>
       </Dialog>
     </>
   );
 }
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://mrautomotive-dd1f6.web.app/">
-        MR AutoMotive
-      </Link>{" "}
-      {new Date().getFullYear()}
-    </Typography>
-  );
-}
 const mapStateToProps = (store) => ({
   currentuser: store.currentuser,
-  allProducts: store.allProducts,
+  all_Products: store.allProducts,
 });
 
 export default connect(mapStateToProps, null)(withRouter(UsersManage));

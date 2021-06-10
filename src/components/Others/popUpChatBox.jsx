@@ -6,11 +6,11 @@ import {connect} from "react-redux";
 import MultipleLoginForms from "../loginForm/MulipleLoginForms";
 import IconButton from "@material-ui/core/IconButton";
 import firebase from "../../config/firebase"
-
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const PopUpChatBox = (props) => {
     const [chatbox,setChatbox] = useState(false)
-    const [userMsg, setUserMsg] = useState("");
     const [oldMsgs, setOldMsgs] = useState([]);
  
     useEffect(() => {
@@ -31,18 +31,9 @@ const PopUpChatBox = (props) => {
     const handleClose = () => {
       setOpen(false);
     };
-    const handleUserMsgProps = (e) => {
-      setUserMsg(e.target.value);
-    };
-
-    const sendMsgQury = (e) => {
-      e.preventDefault();
-      setTimeout(()=>{
-        if(oldMsgs.length > 10){
-          bringDownToChats();
-        }
-       
-      },750)
+    const sendMsgQury = (values) => {
+      let msg = values.msg;
+    
        var dt = new Date();
       var h = dt.getHours(),
           m = dt.getMinutes();
@@ -60,7 +51,7 @@ const PopUpChatBox = (props) => {
 
       let sendMsg = {
         message: {
-            msg: userMsg,
+            msg: msg,
             sentTime: time,
             curtDate: today
         },
@@ -73,8 +64,13 @@ const PopUpChatBox = (props) => {
 
       dbQueriesRef.child(`/${props.currentuser.userUid }`).push(sendMsg)
           .then(() => {
-              setUserMsg('');
+            formik.handleReset();
        
+              if(oldMsgs.length > 10){
+                bringDownToChats();
+              }
+             
+        
           }).catch(function(error) {
              alert(error.message)
           })
@@ -125,12 +121,27 @@ const handleChatbox = () =>{
     }
     
   },750)
-  setUserMsg('');
+
   get_old_chats();
 
 
 }
+const initialValues = {
+  msg: ''
+}
 
+const validationSchema = Yup.object({
+  msg:  Yup.string().required('Required!')
+})
+
+
+const formik = useFormik({
+  initialValues,
+  onSubmit: sendMsgQury,
+  validationSchema,
+  onReset: "",
+
+})
     return (
         <>
         <MultipleLoginForms
@@ -195,19 +206,21 @@ const handleChatbox = () =>{
                                 
                                     
              }
-            <div ref={demo}> &nbsp;</div>  
+            <div ref={demo} className="ul-btm-div"> &nbsp;</div>  
              </ul>
 
             </>
               </main>
    
-                <form onSubmit={(e)=> sendMsgQury(e)} className="chatbox-popup__footer">
-                
+                <form onSubmit={formik.handleSubmit} className="chatbox-popup__footer">
+                {formik.errors.msg ? <div class="invalid-feedback">
+                      {formik.errors.msg}
+                    </div> : null}
                 <aside style={{flex: 10}}>
-                <input type="text" placeholder="Type your message here..." autoFocus onChange={(e)=> handleUserMsgProps(e)}  value={userMsg}/>
                 
-                 
-                
+                <input name="msg" id="msg" type="text" placeholder="Type your message here..."                 
+                onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.msg} className={formik.touched.msg && formik.errors.msg && "is-invalid-cht-inp" } 
+                />
                 </aside>
                 <aside style={{flex: 1, color: '#888', textAlign: 'center'}}>
                
@@ -216,6 +229,7 @@ const handleChatbox = () =>{
               <FaPaperPlane  />
               </IconButton>
                 </aside>
+             
                 </form>
                 
     

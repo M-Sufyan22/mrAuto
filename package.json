@@ -37,7 +37,8 @@
     "react-to-pdf": "0.0.14",
     "redux-thunk": "^2.3.0",
     "swiper": "^6.5.9",
-    "web-vitals": "^1.1.1"
+    "web-vitals": "^1.1.1",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -32,6 +32,8 @@ import ourLogo from "../assets/images/webRelated/gears1.png";
 import html2pdf from "html2pdf.js"
 import jsPDF from 'jspdf';
 import html2canvas from "html2canvas";
+
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: "relative",
@@ -74,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 function Checkout(props) {
-  
+
   const [showLoader, setShowLoader] = useState(true);
   const [myalert, setAlert] = useState({
     show:false, msg:"",head:""
@@ -259,9 +261,7 @@ function Checkout(props) {
 
     html2pdf().from(invoice1).set(opt).save();
   }
-  
 
-  console.log(activeStep)
   return (
     <React.Fragment>
       <CssBaseline />

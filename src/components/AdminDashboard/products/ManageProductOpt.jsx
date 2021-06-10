@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -8,7 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import EditProd from "./EditProd";
 import PostNewProd from "./postNewProd";
-import ViewAllProd from "./ViewAllProd";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,6 +67,7 @@ function SimpleTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+;
 
   return (
     <div className={classes.root}>
@@ -79,7 +79,7 @@ function SimpleTabs() {
         >
           <Tab label="Add New" {...a11yProps(0)} />
           <Tab label="Update Product" {...a11yProps(1)} />
-          <Tab label="view Products" {...a11yProps(2)} />
+         
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -87,9 +87,6 @@ function SimpleTabs() {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <EditProd />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <ViewAllProd />
       </TabPanel>
     </div>
   );

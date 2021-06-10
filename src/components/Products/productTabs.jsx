@@ -308,7 +308,7 @@ function ProductDetailTabs(props) {
                                             })
                                         }}
                                         value={revForm.detailRev}
-                                        className="form-control" id="detailRev" rows="4" name="detailRev"></textarea>
+                                        className="form-control" id="detailRev" rows="4" name="detailRev" required></textarea>
 
                                 </div>
                                 <div className="form-group">
@@ -323,6 +323,7 @@ function ProductDetailTabs(props) {
                                             })
                                         }}
                                         value={revForm.revEmail}
+                                        required
                                     />
 
                                 </div>
@@ -337,6 +338,7 @@ function ProductDetailTabs(props) {
                                             })
                                         }}
                                         value={revForm.revName}
+                                        required
                                     />
 
                                 </div>
