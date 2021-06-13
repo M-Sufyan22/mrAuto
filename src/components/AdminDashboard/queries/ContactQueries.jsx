@@ -9,7 +9,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { withStyles, makeStyles } from "@material-ui/core/styles"; import RefreshRounded from "@material-ui/icons/RefreshRounded"; 
-import Loader from "../../Others/Loader";
+import Loader2 from "../../Others/Loader2";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -114,7 +114,7 @@ function CustomizedTables(props) {
                                 })}
                             </>
                             :
-                            <Loader />
+                            <Loader2 />
                         }
                     </TableBody>
                 </Table>

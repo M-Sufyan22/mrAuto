@@ -50,6 +50,9 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    border: "1px solid red",
+    height: "100vh",
+    overflow: "hidden",
   },
   toolbar: {
     paddingRight: 24,
@@ -115,8 +118,9 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: "100vh",
-    overflow: "auto",
+    height: "100vh !important",
+    overflowX: "hidden",
+    overflowY: "scroll",
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -257,7 +261,7 @@ function AdminDashboard(props) {
 
               <main className={classes.content}>
                 <div className={classes.appBarSpacer} />
-                <Container maxWidth="lg" className={classes.container}>
+                <Container maxWidth="lg" className={classes.container} >
                   <Grid container spacing={3}>
                     <TabPanel value={value} index={0} Dashboard={true} />
                     <TabPanel value={value} index={1} products={true} />
@@ -345,8 +349,8 @@ function TabPanel(props) {
   const { value, index, users, Dashboard, products,orders,contact,quries,emailSubs } = props;
 
   return (
-    <Grid hidden={value !== index} item container>
-      {Dashboard ? (
+    <Grid hidden={value !== index} item container >
+      {/* {Dashboard ? (
         <h1 className="dashboarTabsHeading">DashBoard MR-AUTOMOTIVE</h1>
       ) : (
         ""
@@ -360,29 +364,26 @@ function TabPanel(props) {
       {orders ? <h1 className="dashboarTabsHeading">Manage All orders</h1> : ""}
       {contact ? <h1 className="dashboarTabsHeading">Manage All contacts Queires</h1> : ""}
       {quries ? <h1 className="dashboarTabsHeading">Manage All Quries</h1> : ""}
-      {emailSubs ? <h1 className="dashboarTabsHeading">Manage All NewsLetter Subscribers</h1> : ""}
+      {emailSubs ? <h1 className="dashboarTabsHeading">Manage All NewsLetter Subscribers</h1> : ""} */}
 
 
       {value === index && (
         <>
           {Dashboard ? (
-            <>
-              {" "}
               <Grid container spacing={3}>
                 <Allusers />
                 <Allproducts />
                 <Allorders />
                 <AllUsersSignMethod />
               </Grid>
-            </>
           ) : null}
 
           <div
-            style={{ width: "100%" }}
+            style={{ width: "100%", }}
             container
-            className={useStyles.fixedHeightPaper}
+            // className={useStyles.fixedHeightPaper}
           >
-            <Typography>
+            {/* <Typography> */}
               {products && (
                 <>
                   <ManageProductOpt />
@@ -413,7 +414,7 @@ function TabPanel(props) {
                   <EmailSubs />
                 </>
               )}
-            </Typography>
+            {/* </Typography> */}
           </div>
         </>
       )}

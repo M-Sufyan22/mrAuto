@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { withStyles, makeStyles } from "@material-ui/core/styles"; 
-import Loader from "../../Others/Loader";
+import Loader2 from "../../Others/Loader2";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -101,7 +101,7 @@ function CustomizedTables(props) {
                                 </StyledTableCell>
                             </StyledTableRow>
                             :
-                            <Loader />
+                            <Loader2 />
                         }
                     </TableBody>
                 </Table>

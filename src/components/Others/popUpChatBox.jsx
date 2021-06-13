@@ -60,6 +60,7 @@ const PopUpChatBox = (props) => {
             senderEmail: props.currentuser.userEmail,
             uid: props.currentuser.userUid,
         },
+        userMsg: true
     }
 
       dbQueriesRef.child(`/${props.currentuser.userUid }`).push(sendMsg)
@@ -213,7 +214,8 @@ const formik = useFormik({
               </main>
    
                 <form onSubmit={formik.handleSubmit} className="chatbox-popup__footer">
-                {formik.errors.msg ? <div class="invalid-feedback">
+                {formik.errors.msg ? <div class="invalid-feedback" style={{position: "absolute",
+    top: "0px",left: "26px"}}>
                       {formik.errors.msg}
                     </div> : null}
                 <aside style={{flex: 10}}>

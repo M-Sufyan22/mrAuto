@@ -127,6 +127,7 @@
     justify-content: space-around;
     border-bottom-right-radius: 12px;
     border-bottom-left-radius: 12px;
+    position: relative;
 }
 
 .chat-pop-wrapp {
